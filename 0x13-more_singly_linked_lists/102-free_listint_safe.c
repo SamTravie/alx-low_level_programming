@@ -2,33 +2,28 @@
 
 /**
  * free_listint_safe - frees a listint_t list
- * [The function sets the head to NULL]
- * @h: address of pointer to first node
+ * @h: double pointer of head
  *
- * Return: address of head,
- * the size of the list that was free’d
+ * Return: the size of the list that was free'd
  */
 size_t free_listint_safe(listint_t **h)
 {
-	size_t c = 0;
-	listint_t *head, *temp;
-	long diff;
+	size_t count = 0;
+	listint_t *safe_node = *h;
+	listint_t *tmp_node;
 
 	if (!h)
 		return (0);
-
-	head = *h;
-	*h = NULL;
-	while (head)
+	while (safe_node != NULL)
 	{
-		c++;
-		diff = head->next - head;
-		temp = head;
-		free(temp);
-		if (diff >= 0)
-			break;
-		head = head->next;
-	}
+		count++;
+		tmp_node = safe_node;
+		safe_node = safe_node->next;
+		free(tmp_node);
 
-	return (c);
+		if (tmp_node < safe_node)
+			break;
+	}
+	*h = NULL;
+	return (count);
 }
